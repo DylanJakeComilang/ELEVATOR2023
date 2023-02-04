@@ -2,12 +2,13 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ElevatorSubsystem;
+import java.util.function.DoubleSupplier;
 
 public class ElevatorCommand extends CommandBase{
     ElevatorSubsystem elevator;
-    double speed;
+    DoubleSupplier speed;
 
-    public ElevatorCommand(ElevatorSubsystem elevatorSubsystem, double speed){
+    public ElevatorCommand(ElevatorSubsystem elevatorSubsystem, DoubleSupplier speed){
         elevator = elevatorSubsystem;
         this.speed = speed;
         addRequirements(elevator);
@@ -19,16 +20,16 @@ public class ElevatorCommand extends CommandBase{
     public void initialize() {
 
     }
-    
-    @Override
+ 
     public void execute() {
+     double elevatorSpeed = speed.getAsDouble();
     if (elevator.getUpperLimit()){
        elevator.setStop();
     } else if (elevator.getLowerLimit()){
         elevator.setStop();
         elevator.resetEncoder();
     } else{
-        elevator.setSpeed(speed);
+        elevator.setSpeed(elevatorSpeed);
     }
     }
 

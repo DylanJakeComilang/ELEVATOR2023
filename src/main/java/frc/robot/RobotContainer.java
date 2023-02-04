@@ -2,6 +2,9 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+
+
+
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
@@ -38,6 +41,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+    elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> xbox.getLeftY()));
     configureBindings();
   }
 
@@ -55,7 +59,7 @@ public class RobotContainer {
     * new JoystickButton(xbox, 2).onTrue(new PositionsCommand(elevatorSubsystem,100,"Middle")); // sets middle states
     * new JoystickButton(xbox, 3).onTrue(new PositionsCommand(elevatorSubsystem,200,"High")); // sets high states
     */
-    new JoystickButton(xbox, 0);
+   
     new JoystickButton(xbox, 4).whileTrue(new resetEnCommand(elevatorSubsystem)); // reset encoder
   }
 
