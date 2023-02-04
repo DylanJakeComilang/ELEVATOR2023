@@ -6,11 +6,12 @@ import java.util.function.DoubleSupplier;
 
 public class ElevatorCommand extends CommandBase{
     ElevatorSubsystem elevator;
-    DoubleSupplier speed;
+    DoubleSupplier doubleSupplier;
+    double speed;
 
-    public ElevatorCommand(ElevatorSubsystem elevatorSubsystem, DoubleSupplier speed){
+    public ElevatorCommand(ElevatorSubsystem elevatorSubsystem, DoubleSupplier doubleSupplier){
         elevator = elevatorSubsystem;
-        this.speed = speed;
+        this.doubleSupplier = doubleSupplier;
         addRequirements(elevator);
     }
 
@@ -22,8 +23,9 @@ public class ElevatorCommand extends CommandBase{
     }
  
     public void execute() {
-     double elevatorSpeed = speed.getAsDouble();
-     elevator.manualElevator(elevatorSpeed);
+        double joystickSpeed = doubleSupplier.getAsDouble();
+
+        elevator.manualElevator(joystickSpeed);
     }
 
     @Override

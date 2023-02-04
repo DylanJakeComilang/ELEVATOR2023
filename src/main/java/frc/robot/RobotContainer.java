@@ -40,7 +40,8 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-    elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> xbox.getLeftY()));
+     elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> xbox.getLeftY()));
+
     configureBindings();
   }
 
@@ -58,8 +59,9 @@ public class RobotContainer {
     * new JoystickButton(xbox, 2).onTrue(new PositionsCommand(elevatorSubsystem,100,"Middle")); // sets middle states
     * new JoystickButton(xbox, 3).onTrue(new PositionsCommand(elevatorSubsystem,200,"High")); // sets high states
     */
-   
-    new JoystickButton(xbox, 4).whileTrue(new resetEnCommand(elevatorSubsystem)); // reset encoder
+  //  new JoystickButton(xbox, 5).whileTrue(new ElevatorCommand(elevatorSubsystem, 0.1));
+  //  new JoystickButton(xbox, 6).whileTrue(new ElevatorCommand(elevatorSubsystem, -0.1));
+    new JoystickButton(xbox, 4).onTrue(new resetEnCommand(elevatorSubsystem)); // reset encoder
   }
 
   /**

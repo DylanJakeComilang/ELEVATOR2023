@@ -34,7 +34,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     ////////////////////////////////////
 
     public double deadZone(double speed){
-        if (speed < Math.abs(0.1)){
+        if (Math.abs(speed) < 0.1){
             return 0;
         } else {
             return speed;
@@ -64,10 +64,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         if (PID.atSetpoint()) { // if at setpoint, motor stops
             return 0;
         }
-        if (calc > 0.1) { // if error over 1 encoder, set motor max "1"
-            return 0.1;
-        } else if (calc < -0.1) { // if error under -1 encoder, set motor max "-1"
-            return -0.1;
+        if (calc > 0.2) { // if error over 1 encoder, set motor max "1"
+            return 0.2;
+        } else if (calc < -0.2) { // if error under -1 encoder, set motor max "-1"
+            return -0.2;
         } else { // set motor to error
             return calc;
         }
@@ -75,9 +75,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void controlI() { // continues to check for vaule changes | ie. 1 -> -1
         double currentErrorPos = PID.getPositionError();
-        if (previousErrorPos > 1 && currentErrorPos < 1) { // if error was negative and now positive, reset I term
+        if (previousErrorPos > 0 && currentErrorPos < 0) { // if error was negative and now positive, reset I term
             PID.reset();
-        } else if (previousErrorPos < 1 && currentErrorPos > 1) { // if error was positive and now negative, reset I term
+        } else if (previousErrorPos < 0 && currentErrorPos > 0) { // if error was positive and now negative, reset I term
             PID.reset();
         }
         previousErrorPos = PID.getPositionError();
@@ -122,33 +122,18 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void setStop() {
-        elevatorMotor.set(0);
+        elevatorMotor.stopMotor();
     }
 
-    public void setUpperLimit() {
-        if (upperLimitPressed()) {
-            setStop();
-        } else {
-            setUp(0);
-        }
-    }
-
-    public void setLowerLimit() {
-        if (lowerLimitPressed()) {
-            setStop();
-            resetEncoder();
-        }
-    }
-    
     public void manualElevator(double elevatorSpeed){ // set the elevator with the xbox joystick
-    if (upperLimitPressed()){
+    setSpeed(-elevatorSpeed);
+        if (upperLimitPressed()){
        setStop();
     } else if (lowerLimitPressed()){
         setStop();
         resetEncoder();
-    } else{
-        setSpeed(elevatorSpeed);
     }
+    
     }
 
 
@@ -164,5 +149,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         kp = SmartDashboard.getNumber("kd", 0);
         SmartDashboard.putNumber("kd", kd);
         SmartDashboard.putNumber("Encoder Count", getEncoder());
+        SmartDashboard.putBoolean("Upper Limit Pressed", upperLimitPressed());
+        SmartDashboard.putBoolean("Lower Limit", lowerLimitPressed());
     }
 }
