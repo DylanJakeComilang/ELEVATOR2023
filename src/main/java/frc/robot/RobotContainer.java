@@ -56,8 +56,8 @@ public class RobotContainer {
    */
   private void configureBindings() {
    /* new JoystickButton(xbox, 1).onTrue(new PositionsCommand(elevatorSubsystem,0,"Hybrid"));   // sets hybrid states
-    * new JoystickButton(xbox, 2).onTrue(new PositionsCommand(elevatorSubsystem,100,"Middle")); // sets middle states
-    * new JoystickButton(xbox, 3).onTrue(new PositionsCommand(elevatorSubsystem,200,"High")); // sets high states
+    * new JoystickButton(xbox, 2).onTrue(new PositionsCommand(elevatorSubsystem,10000,"Middle")); // sets middle states
+    * new JoystickButton(xbox, 3).onTrue(new PositionsCommand(elevatorSubsystem,20000,"High")); // sets high states
     */
   //  new JoystickButton(xbox, 5).whileTrue(new ElevatorCommand(elevatorSubsystem, 0.1));
   //  new JoystickButton(xbox, 6).whileTrue(new ElevatorCommand(elevatorSubsystem, -0.1));

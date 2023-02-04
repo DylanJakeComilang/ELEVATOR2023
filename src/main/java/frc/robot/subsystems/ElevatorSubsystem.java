@@ -30,7 +30,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     ////////////////////////////////////
-    //            DEADZONE            //
+    //           Dead Zone            //
     ////////////////////////////////////
 
     public double deadZone(double speed){
@@ -40,8 +40,6 @@ public class ElevatorSubsystem extends SubsystemBase {
             return speed;
         }
     }
-    
-    
 
     ////////////////////////////////////
     //            Encoders            //
@@ -97,20 +95,72 @@ public class ElevatorSubsystem extends SubsystemBase {
     //             Limits             //
     ////////////////////////////////////
 
-    public boolean upperLimitPressed() { // returns if upperLimit is pressed
+    public boolean upperLimitPressed() { // checks if upperLimit is pressed
         return upperLimit.get();
     }
 
-    public boolean lowerLimitPressed() { // returns if lowerLimit is pressed
+    public boolean lowerLimitPressed() { // checks if lowerLimit is pressed
         return lowerLimit.get();
     }
+
+    // RANGES
+
+    public boolean inLowRange(double low, double range){ // uses parameters checks if position is low
+        double lowMax = low + range;
+        return (getEncoder() < lowMax && getEncoder() > low);
+    }
+
+    public boolean inMidRange(double mid, double range){ // uses parameters checks if position is in the middle
+        double midMax = mid + range;
+        double midMin = mid - range;
+        return (getEncoder() < midMax && getEncoder() > midMin);
+    }
+
+    public boolean inHighRange(double high, double range){ // checks if position is high
+        double highMin = high - range;
+        return (getEncoder() > highMin);
+    }
+
+    public void goLow(double low, double range){
+        if (!inLowRange(low, range)){
+            setSpeed(-0.2);
+        }
+        else{
+            setStop();
+        }
+    }
+
+    public void goMid(double mid, double range){
+        if (!inMidRange(mid, range)){
+            if (getEncoder() > mid){
+                setSpeed(-0.2);
+            }
+            else if (getEncoder() < mid){
+                setSpeed(0.2);
+            }
+        }
+        else{
+            setStop();
+        }
+    }
+
+    public void goHigh(double high, double range){
+        if (!inHighRange(high, range)){
+            setSpeed(0.2);
+        }
+        else{
+            setStop();
+        }
+    }
+
+
 
     ////////////////////////////////////
     //           Set Motors           //
     ////////////////////////////////////
 
     public void setSpeed(double speed){
-        elevatorMotor.set(deadZone(speed));
+        elevatorMotor.set(deadZone(-speed));
     }
 
     public void setUp(double speed) {
@@ -126,14 +176,13 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void manualElevator(double elevatorSpeed){ // set the elevator with the xbox joystick
-    setSpeed(-elevatorSpeed);
+    setSpeed(elevatorSpeed);
         if (upperLimitPressed()){
        setStop();
     } else if (lowerLimitPressed()){
         setStop();
         resetEncoder();
     }
-    
     }
 
 
@@ -141,13 +190,13 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorMotor.setNeutralMode(NeutralMode.Brake);
     }
 
-    public void periodic(){
-        kp = SmartDashboard.getNumber("kp", 0);
-        SmartDashboard.putNumber("kp", kp);
-        kp = SmartDashboard.getNumber("ki", 0);
-        SmartDashboard.putNumber("ki", ki);
-        kp = SmartDashboard.getNumber("kd", 0);
-        SmartDashboard.putNumber("kd", kd);
+    public void periodic(){                                               //
+        kp = SmartDashboard.getNumber("kp", 0);          ///
+        SmartDashboard.putNumber("kp", kp);                            ////
+        ki = SmartDashboard.getNumber("ki", 0); ///////////////  edit PID vaules in SmartDashboard
+        SmartDashboard.putNumber("ki", ki);                            ////
+        kd = SmartDashboard.getNumber("kd", 0);          ///
+        SmartDashboard.putNumber("kd", kd);                          //
         SmartDashboard.putNumber("Encoder Count", getEncoder());
         SmartDashboard.putBoolean("Upper Limit Pressed", upperLimitPressed());
         SmartDashboard.putBoolean("Lower Limit", lowerLimitPressed());
