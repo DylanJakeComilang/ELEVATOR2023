@@ -20,7 +20,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private double kp;
     private double ki;
     private double kd;
-    private PIDController PID = new PIDController(kp, ki, kd);
+    private PIDController PID = new PIDController(0.0007, ki, kd);
     private WPI_TalonFX elevatorMotor = new WPI_TalonFX(OperatorConstants.motorID);
     private TalonFXSensorCollection elevatorEncoder = new TalonFXSensorCollection(elevatorMotor);
     private double previousErrorPos;
@@ -163,12 +163,12 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorMotor.set(deadZone(-speed));
     }
 
-    public void setUp(double speed) {
-        elevatorMotor.set(speed);
+    public void setUp() {
+        elevatorMotor.set(0.2);
     }
 
-    public void setDown(double speed) {
-        elevatorMotor.set(-speed);
+    public void setDown() {
+        elevatorMotor.set(-0.2);
     }
 
     public void setStop() {

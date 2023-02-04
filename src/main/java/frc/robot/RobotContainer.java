@@ -13,14 +13,17 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.commands.resetEnCommand;
 import frc.robot.commands.PositionsCommand;
+import frc.robot.commands.goHighCommand;
+import frc.robot.commands.goLowCommand;
+import frc.robot.commands.goMiddleCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -31,11 +34,12 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
-  private final XboxController xbox = new XboxController(1);
+  private final XboxController xbox = new XboxController(0);
+  private final Joystick joystick = new Joystick(1);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -49,19 +53,25 @@ public class RobotContainer {
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
    * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * edu.wpi.first.wpilibj2.command..CommandGenericHID}'s subclasses for {@link
+   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command..CommandPS4Controller
+   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command..CommandJoystick Flight
    * joysticks}.
    */
   private void configureBindings() {
-   /* new JoystickButton(xbox, 1).onTrue(new PositionsCommand(elevatorSubsystem,0,"Hybrid"));   // sets hybrid states
-    * new JoystickButton(xbox, 2).onTrue(new PositionsCommand(elevatorSubsystem,10000,"Middle")); // sets middle states
-    * new JoystickButton(xbox, 3).onTrue(new PositionsCommand(elevatorSubsystem,20000,"High")); // sets high states
+   /* new JoystickButton(Joystick, 1).onTrue(new PositionsCommand(elevatorSubsystem,0,"Hybrid"));   // sets hybrid states
+    * new JoystickButton(Joystick, 2).onTrue(new PositionsCommand(elevatorSubsystem,10000,"Middle")); // sets middle states
+    * new JoystickButton(Joystick, 3).onTrue(new PositionsCommand(elevatorSubsystem,20000,"High")); // sets high states
     */
-  //  new JoystickButton(xbox, 5).whileTrue(new ElevatorCommand(elevatorSubsystem, 0.1));
-  //  new JoystickButton(xbox, 6).whileTrue(new ElevatorCommand(elevatorSubsystem, -0.1));
-    new JoystickButton(xbox, 4).onTrue(new resetEnCommand(elevatorSubsystem)); // reset encoder
+
+    new JoystickButton(joystick, 1).onTrue(new goLowCommand(elevatorSubsystem));
+    new JoystickButton(joystick, 2).onTrue(new goMiddleCommand(elevatorSubsystem));
+    new JoystickButton(joystick, 3).onTrue(new goHighCommand(elevatorSubsystem));
+
+
+  //  new JoystickButton(Joystick, 5).whileTrue(new ElevatorCommand(elevatorSubsystem, 0.1));
+  //  new JoystickButton(Joystick, 6).whileTrue(new ElevatorCommand(elevatorSubsystem, -0.1));
+    new JoystickButton(joystick, 4).onTrue(new resetEnCommand(elevatorSubsystem)); // reset encoder
   }
 
   /**
