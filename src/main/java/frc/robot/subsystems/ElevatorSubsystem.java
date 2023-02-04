@@ -20,7 +20,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private double kp;
     private double ki;
     private double kd;
-    private PIDController PID = new PIDController(0.001, ki, kd);
+    private PIDController PID = new PIDController(0.000000000000001, ki, kd);
     private WPI_TalonFX elevatorMotor = new WPI_TalonFX(OperatorConstants.motorID);
     private TalonFXSensorCollection elevatorEncoder = new TalonFXSensorCollection(elevatorMotor);
     private double previousErrorPos;
@@ -29,6 +29,18 @@ public class ElevatorSubsystem extends SubsystemBase {
         PID.setTolerance(10); // creates range for set point | ie. positionTolerence = 1, setpoint = 1 -> setpoint range = 0.9 , 1.1
     }
 
+    ////////////////////////////////////
+    //            DEADZONE            //
+    ////////////////////////////////////
+
+    public double deadZone(double speed){
+        if (speed < Math.abs(0.1)){
+            return 0;
+        } else {
+            return speed;
+        }
+    }
+    
     
 
     ////////////////////////////////////
@@ -77,7 +89,6 @@ public class ElevatorSubsystem extends SubsystemBase {
         double calc = calculate(setpoint);
         SmartDashboard.putNumber("Error", calc);
         SmartDashboard.putNumber("Setpoint", setpoint);
-        SmartDashboard.putNumber("Encoder Count", getEncoder());
         elevatorMotor.set(calc);
         controlI();
     }
@@ -99,7 +110,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     ////////////////////////////////////
 
     public void setSpeed(double speed){
-        elevatorMotor.set(speed);
+        elevatorMotor.set(deadZone(speed));
     }
 
     public void setUp(double speed) {
@@ -140,5 +151,6 @@ public class ElevatorSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("ki", ki);
         kp = SmartDashboard.getNumber("kd", 0);
         SmartDashboard.putNumber("kd", kd);
+        SmartDashboard.putNumber("Encoder Count", getEncoder());
     }
 }
