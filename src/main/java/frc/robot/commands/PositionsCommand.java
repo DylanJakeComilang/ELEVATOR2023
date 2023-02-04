@@ -5,11 +5,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ElevatorSubsystem;
 
 public class PositionsCommand extends CommandBase{
-    ElevatorSubsystem elevator;
+   /* ElevatorSubsystem elevator;
     double setpoint;
     String elevatorPosition;
 
-    public PositionsCommand(ElevatorSubsystem elevatorSubsystem, double setpoint, String elevatorPosition){
+     public PositionsCommand(ElevatorSubsystem elevatorSubsystem, double setpoint, String elevatorPosition){
         elevator = elevatorSubsystem;
         this.elevatorPosition = elevatorPosition;
         this.setpoint = setpoint;
@@ -40,5 +40,5 @@ public class PositionsCommand extends CommandBase{
     @Override
     public boolean isFinished() {
         return false;
-    }
+    } */
 }

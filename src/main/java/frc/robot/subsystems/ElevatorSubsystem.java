@@ -20,13 +20,13 @@ public class ElevatorSubsystem extends SubsystemBase {
     private double kp;
     private double ki;
     private double kd;
-    private PIDController PID = new PIDController(0.000000000000001, ki, kd);
+    private PIDController PID = new PIDController(kp, ki, kd);
     private WPI_TalonFX elevatorMotor = new WPI_TalonFX(OperatorConstants.motorID);
     private TalonFXSensorCollection elevatorEncoder = new TalonFXSensorCollection(elevatorMotor);
     private double previousErrorPos;
 
     public ElevatorSubsystem(){
-        PID.setTolerance(10); // creates range for set point | ie. positionTolerence = 1, setpoint = 1 -> setpoint range = 0.9 , 1.1
+        PID.setTolerance(10); // creates range for set point | ie. positionTolerence = 0.1, setpoint = 1 -> setpoint range = 0.9 , 1.1
     }
 
     ////////////////////////////////////
@@ -97,11 +97,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     //             Limits             //
     ////////////////////////////////////
 
-    public boolean getUpperLimit() {
+    public boolean upperLimitPressed() { // returns if upperLimit is pressed
         return upperLimit.get();
     }
 
-    public boolean getLowerLimit() {
+    public boolean lowerLimitPressed() { // returns if lowerLimit is pressed
         return lowerLimit.get();
     }
 
@@ -126,7 +126,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void setUpperLimit() {
-        if (getUpperLimit()) {
+        if (upperLimitPressed()) {
             setStop();
         } else {
             setUp(0);
@@ -134,11 +134,23 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void setLowerLimit() {
-        if (getLowerLimit()) {
+        if (lowerLimitPressed()) {
             setStop();
             resetEncoder();
         }
     }
+    
+    public void manualElevator(double elevatorSpeed){ // set the elevator with the xbox joystick
+    if (upperLimitPressed()){
+       setStop();
+    } else if (lowerLimitPressed()){
+        setStop();
+        resetEncoder();
+    } else{
+        setSpeed(elevatorSpeed);
+    }
+    }
+
 
     public void initialize(){
         elevatorMotor.setNeutralMode(NeutralMode.Brake);

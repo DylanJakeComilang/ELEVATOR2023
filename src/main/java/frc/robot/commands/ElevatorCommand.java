@@ -18,19 +18,12 @@ public class ElevatorCommand extends CommandBase{
     
     @Override
     public void initialize() {
-
+        elevator.initialize();
     }
  
     public void execute() {
      double elevatorSpeed = speed.getAsDouble();
-    if (elevator.getUpperLimit()){
-       elevator.setStop();
-    } else if (elevator.getLowerLimit()){
-        elevator.setStop();
-        elevator.resetEncoder();
-    } else{
-        elevator.setSpeed(elevatorSpeed);
-    }
+     elevator.manualElevator(elevatorSpeed);
     }
 
     @Override
