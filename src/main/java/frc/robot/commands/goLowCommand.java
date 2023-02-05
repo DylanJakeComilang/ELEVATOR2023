@@ -6,7 +6,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 public class goLowCommand extends CommandBase {
     ElevatorSubsystem elevator;
     double low = 0;
-    double range = 100;
+    double range = 3000;
 
     public goLowCommand(ElevatorSubsystem elevator){
         this.elevator = elevator;

@@ -123,7 +123,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void goLow(double low, double range){
         if (!inLowRange(low, range)){
-            setSpeed(-0.2);
+            setDown();
         }
         else{
             setStop();
@@ -133,10 +133,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void goMid(double mid, double range){
         if (!inMidRange(mid, range)){
             if (getEncoder() > mid){
-                setSpeed(-0.2);
+                setUp();
             }
             else if (getEncoder() < mid){
-                setSpeed(0.2);
+                setDown();;
             }
         }
         else{
@@ -146,7 +146,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void goHigh(double high, double range){
         if (!inHighRange(high, range)){
-            setSpeed(0.2);
+            setUp();
         }
         else{
             setStop();
@@ -164,11 +164,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void setUp() {
-        elevatorMotor.set(0.2);
+        elevatorMotor.set(-0.2);
     }
 
     public void setDown() {
-        elevatorMotor.set(-0.2);
+        elevatorMotor.set(0.2);
     }
 
     public void setStop() {
