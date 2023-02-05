@@ -132,11 +132,11 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void goMid(double mid, double range){
         if (!inMidRange(mid, range)){
-            if (getEncoder() > mid){
+            if (getEncoder() < mid){
                 setUp();
             }
-            else if (getEncoder() < mid){
-                setDown();;
+            else if (getEncoder() > mid){
+                setDown();
             }
         }
         else{
@@ -164,11 +164,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void setUp() {
-        elevatorMotor.set(-0.2);
+        elevatorMotor.set(0.2);
     }
 
     public void setDown() {
-        elevatorMotor.set(0.2);
+        elevatorMotor.set(-0.2);
     }
 
     public void setStop() {
