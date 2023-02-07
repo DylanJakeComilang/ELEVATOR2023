@@ -44,7 +44,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-     elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> joystick.getY()));
+    // elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> joystick.getY()));
 
     configureBindings();
   }
@@ -71,7 +71,14 @@ public class RobotContainer {
 
   //  new JoystickButton(Joystick, 5).whileTrue(new ElevatorCommand(elevatorSubsystem, 0.1));
   //  new JoystickButton(Joystick, 6).whileTrue(new ElevatorCommand(elevatorSubsystem, -0.1));
-    new JoystickButton(joystick, 11).whileTrue(new resetEnCommand(elevatorSubsystem)); // reset encoder
+    new JoystickButton(joystick,11).whileTrue(new resetEnCommand(elevatorSubsystem)); // reset encoder
+
+    /////////////////////////////////   |  Once the button is held, the can move manualy |
+    //         Lock Position       //   |      after being let go, position is locked    |
+    /////////////////////////////////   ↓                                                ↓
+
+    new JoystickButton(joystick,5).whileTrue(new ElevatorCommand(elevatorSubsystem, () -> joystick.getY()));
+    new JoystickButton(joystick,5).whileFalse(new PositionsCommand(elevatorSubsystem));
   }
 
   /**

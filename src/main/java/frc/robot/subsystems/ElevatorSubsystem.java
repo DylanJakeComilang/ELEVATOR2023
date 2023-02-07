@@ -11,9 +11,9 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.controller.PIDController;
 
 public class ElevatorSubsystem extends SubsystemBase {
-   
-   // objects
-   
+
+    // objects
+
     private DigitalInput upperLimit = new DigitalInput(OperatorConstants.upperLimit);
     private DigitalInput lowerLimit = new DigitalInput(OperatorConstants.lowerLimit);
     private double kp;
@@ -24,16 +24,17 @@ public class ElevatorSubsystem extends SubsystemBase {
     private TalonFXSensorCollection elevatorEncoder = new TalonFXSensorCollection(elevatorMotor);
     private double previousErrorPos;
 
-    public ElevatorSubsystem(){
-        PID.setTolerance(10); // creates range for set point | ie. positionTolerence = 0.1, setpoint = 1 -> setpoint range = 0.9 , 1.1
+    public ElevatorSubsystem() {
+        PID.setTolerance(10); // creates range for set point | ie. positionTolerence = 0.1, setpoint = 1 ->
+                                                // setpoint range = 0.9 , 1.1
     }
 
     ////////////////////////////////////
-    //           Dead Zone            //
+    //            Dead Zone           //
     ////////////////////////////////////
 
-    public double deadZone(double speed){
-        if (Math.abs(speed) < 0.1){
+    public double deadZone(double speed) {
+        if (Math.abs(speed) < 0.1) {
             return 0;
         } else {
             return speed;
@@ -74,7 +75,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         double currentErrorPos = PID.getPositionError();
         if (previousErrorPos > 0 && currentErrorPos < 0) { // if error was negative and now positive, reset I term
             PID.reset();
-        } else if (previousErrorPos < 0 && currentErrorPos > 0) { // if error was positive and now negative, reset I term
+        } else if (previousErrorPos < 0 && currentErrorPos > 0) { // if error was positive and now negative, reset I
+                                                                  // term
             PID.reset();
         }
         previousErrorPos = PID.getPositionError();
@@ -82,12 +84,16 @@ public class ElevatorSubsystem extends SubsystemBase {
         SmartDashboard.getNumber("previousErrorPos", previousErrorPos);
     }
 
-    public void outputMotor(double setpoint){ // PID used for motors
+    public void outputMotor(double setpoint) { // PID used for motors
         double calc = calculate(setpoint);
         SmartDashboard.putNumber("Error", calc);
         SmartDashboard.putNumber("Setpoint", setpoint);
         elevatorMotor.set(calc);
         controlI();
+    }
+
+    public void lockPID(){
+        calculate(getEncoder());
     }
 
     ////////////////////////////////////
@@ -104,61 +110,55 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     // RANGES
 
-    public boolean inLowRange(double low, double range){ // uses parameters checks if position is low
+    public boolean inLowRange(double low, double range) { // uses parameters checks if position is low
         double lowMax = low + range;
         return (getEncoder() < lowMax);
     }
 
-    public boolean inMidRange(double mid, double range){ // uses parameters checks if position is in the middle
+    public boolean inMidRange(double mid, double range) { // uses parameters checks if position is in the middle
         double midMax = mid + range;
         double midMin = mid - range;
         return (getEncoder() < midMax && getEncoder() > midMin);
     }
 
-    public boolean inHighRange(double high, double range){ // checks if position is high
+    public boolean inHighRange(double high, double range) { // checks if position is high
         double highMin = high - range;
         return (getEncoder() > highMin);
     }
 
-    public void goLow(double low, double range){
-        if (!inLowRange(low, range)){
+    public void goLow(double low, double range) {
+        if (!inLowRange(low, range)) {
             setDown();
-        }
-        else{
+        } else {
             setStop();
         }
     }
 
-    public void goMid(double mid, double range){
-        if (!inMidRange(mid, range)){
-            if (getEncoder() < mid){
+    public void goMid(double mid, double range) {
+        if (!inMidRange(mid, range)) {
+            if (getEncoder() < mid) {
                 setUp();
-            }
-            else if (getEncoder() > mid){
+            } else if (getEncoder() > mid) {
                 setDown();
             }
-        }
-        else{
+        } else {
             setStop();
         }
     }
 
-    public void goHigh(double high, double range){
-        if (!inHighRange(high, range)){
+    public void goHigh(double high, double range) {
+        if (!inHighRange(high, range)) {
             setUp();
-        }
-        else{
+        } else {
             setStop();
         }
     }
-
-
 
     ////////////////////////////////////
     //           Set Motors           //
     ////////////////////////////////////
 
-    public void setSpeed(double speed){
+    public void setSpeed(double speed) {
         elevatorMotor.set(deadZone(-speed));
     }
 
@@ -174,28 +174,44 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorMotor.stopMotor();
     }
 
-    public void manualElevator(double elevatorSpeed){ // set the elevator with the xbox joystick
-    setSpeed(elevatorSpeed);
-        if (upperLimitPressed()){
-       setStop();
-    } else if (lowerLimitPressed()){
-        setStop();
-        resetEncoder();
+    public void stopSpeedPositive(double elevatorSpeed){
+        if (elevatorSpeed > 0) {
+            setStop();
+        }
+        else{
+            setSpeed(elevatorSpeed);
+        }
     }
+
+    public void stopSpeedNegative(double elevatorSpeed){
+        if (elevatorSpeed > 0) {
+            setStop();
+        }
+        else{
+            setSpeed(elevatorSpeed);
+        }
     }
 
 
-    public void initialize(){
+    public void manualElevator(double elevatorSpeed) { // set the elevator with the xbox joystick
+        if (upperLimitPressed()) {
+            stopSpeedPositive(elevatorSpeed);
+        } else if (lowerLimitPressed()) {
+            stopSpeedNegative(elevatorSpeed);
+        }
+    }
+
+    public void initialize() {
         elevatorMotor.setNeutralMode(NeutralMode.Brake);
     }
 
-    public void periodic(){                                               //
-        kp = SmartDashboard.getNumber("kp", 0);          ///
-        SmartDashboard.putNumber("kp", kp);                            ////
-        ki = SmartDashboard.getNumber("ki", 0); ///////////////  edit PID vaules in SmartDashboard
-        SmartDashboard.putNumber("ki", ki);                            ////
-        kd = SmartDashboard.getNumber("kd", 0);          ///
-        SmartDashboard.putNumber("kd", kd);                          //
+    public void periodic() {
+        kp = SmartDashboard.getNumber("kp", 0);           //////
+        SmartDashboard.putNumber("kp", kp);                              /////
+        ki = SmartDashboard.getNumber("ki", 0); ////////////////// edit PID vaules in SmartDashboard
+        SmartDashboard.putNumber("ki", ki);                              /////
+        kd = SmartDashboard.getNumber("kd", 0);          //////
+        SmartDashboard.putNumber("kd", kd);
         SmartDashboard.putNumber("Encoder Count", getEncoder());
         SmartDashboard.putBoolean("Upper Limit Pressed", upperLimitPressed());
         SmartDashboard.putBoolean("Lower Limit", lowerLimitPressed());
