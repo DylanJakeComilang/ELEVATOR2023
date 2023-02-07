@@ -5,8 +5,8 @@ import frc.robot.subsystems.ElevatorSubsystem;
 
 public class goMiddleCommand extends CommandBase {
     ElevatorSubsystem elevator;
-    double mid = 100000;
-    double range = 1500;
+    double mid = 0;
+    double range = 0;
 
     public goMiddleCommand(ElevatorSubsystem elevator){
         this.elevator = elevator;

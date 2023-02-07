@@ -9,7 +9,6 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.controller.PIDController;
-import com.revrobotics.CANSparkMax.IdleMode;
 
 public class ElevatorSubsystem extends SubsystemBase {
    
@@ -107,7 +106,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public boolean inLowRange(double low, double range){ // uses parameters checks if position is low
         double lowMax = low + range;
-        return (getEncoder() < lowMax && getEncoder() > low);
+        return (getEncoder() < lowMax);
     }
 
     public boolean inMidRange(double mid, double range){ // uses parameters checks if position is in the middle
