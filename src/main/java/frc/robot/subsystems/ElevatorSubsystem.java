@@ -16,10 +16,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private DigitalInput upperLimit = new DigitalInput(OperatorConstants.upperLimit);
     private DigitalInput lowerLimit = new DigitalInput(OperatorConstants.lowerLimit);
-    private double kp;
-    private double ki;
-    private double kd;
-    private PIDController PID = new PIDController(0.0007, ki, kd);
+    private PIDController PID = new PIDController(0.0007, 0, 0);
     private WPI_TalonFX elevatorMotor = new WPI_TalonFX(OperatorConstants.motorID);
     private TalonFXSensorCollection elevatorEncoder = new TalonFXSensorCollection(elevatorMotor);
     private double previousErrorPos;
@@ -59,13 +56,14 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public double calculate(double setpoint) {
         double calc = PID.calculate(getEncoder(), setpoint); // calculates error
+        double limit = 0.2;
         if (PID.atSetpoint()) { // if at setpoint, motor stops
             return 0;
         }
-        if (calc > 0.2) { // if error over 1 encoder, set motor max "1"
-            return 0.2;
-        } else if (calc < -0.2) { // if error under -1 encoder, set motor max "-1"
-            return -0.2;
+        if (calc > limit) { // if error over limit encoder counts, set motor max "limit"
+            return limit;
+        } else if (calc < -limit) { // if error under -limit encoder counts, set motor max "-limit"
+            return -limit;
         } else { // set motor to error
             return calc;
         }
@@ -147,10 +145,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     ///////////////////////////////
-    //      TeleOp  |  Manual    //
+    //     TeleOp  |  Manual     //
     ///////////////////////////////
 
-    public void stopSpeedPositive(double elevatorSpeed){
+    public void stopSpeedPositive(double elevatorSpeed){ // prevents manual controls from going positive | up ↑
         if (elevatorSpeed > 0) {
             setStop();
         }
@@ -159,7 +157,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         }
     }
 
-    public void stopSpeedNegative(double elevatorSpeed){
+    public void stopSpeedNegative(double elevatorSpeed){ // prevents manual controls from going negative | down ↓
         if (elevatorSpeed > 0) {
             setStop();
         }
@@ -216,12 +214,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void periodic() {
-        kp = SmartDashboard.getNumber("kp", 0);           //////
-        SmartDashboard.putNumber("kp", kp);                              /////
-        ki = SmartDashboard.getNumber("ki", 0); ////////////////// edit PID vaules in SmartDashboard
-        SmartDashboard.putNumber("ki", ki);                              /////
-        kd = SmartDashboard.getNumber("kd", 0);          //////
-        SmartDashboard.putNumber("kd", kd);
         SmartDashboard.putNumber("Encoder Count", getEncoder());
         SmartDashboard.putBoolean("Upper Limit Pressed", upperLimitPressed());
         SmartDashboard.putBoolean("Lower Limit", lowerLimitPressed());
