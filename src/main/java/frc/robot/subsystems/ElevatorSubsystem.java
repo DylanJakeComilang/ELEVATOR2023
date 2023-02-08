@@ -126,6 +126,61 @@ public class ElevatorSubsystem extends SubsystemBase {
         return (getEncoder() > highMin);
     }
 
+    ////////////////////////////////////
+    //           Set Motors           //
+    ////////////////////////////////////
+
+    public void setSpeed(double speed) {
+        elevatorMotor.set(deadZone(-speed));
+    }
+
+    public void setUp() {
+        elevatorMotor.set(0.2);
+    }
+
+    public void setDown() {
+        elevatorMotor.set(-0.2);
+    }
+
+    public void setStop() {
+        elevatorMotor.stopMotor();
+    }
+
+    ///////////////////////////////
+    //      TeleOp  |  Manual    //
+    ///////////////////////////////
+
+    public void stopSpeedPositive(double elevatorSpeed){
+        if (elevatorSpeed > 0) {
+            setStop();
+        }
+        else{
+            setSpeed(elevatorSpeed);
+        }
+    }
+
+    public void stopSpeedNegative(double elevatorSpeed){
+        if (elevatorSpeed > 0) {
+            setStop();
+        }
+        else{
+            setSpeed(elevatorSpeed);
+        }
+    }
+
+
+    public void manualElevator(double elevatorSpeed) { // set the elevator with the xbox joystick
+        if (upperLimitPressed()) {
+            stopSpeedPositive(elevatorSpeed);
+        } else if (lowerLimitPressed()) {
+            stopSpeedNegative(elevatorSpeed);
+        }
+    }
+
+    /////////////////////////////////////
+    //  Set Position Through Encoders  //
+    /////////////////////////////////////
+
     public void goLow(double low, double range) {
         if (!inLowRange(low, range)) {
             setDown();
@@ -154,52 +209,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         }
     }
 
-    ////////////////////////////////////
-    //           Set Motors           //
-    ////////////////////////////////////
-
-    public void setSpeed(double speed) {
-        elevatorMotor.set(deadZone(-speed));
-    }
-
-    public void setUp() {
-        elevatorMotor.set(0.2);
-    }
-
-    public void setDown() {
-        elevatorMotor.set(-0.2);
-    }
-
-    public void setStop() {
-        elevatorMotor.stopMotor();
-    }
-
-    public void stopSpeedPositive(double elevatorSpeed){
-        if (elevatorSpeed > 0) {
-            setStop();
-        }
-        else{
-            setSpeed(elevatorSpeed);
-        }
-    }
-
-    public void stopSpeedNegative(double elevatorSpeed){
-        if (elevatorSpeed > 0) {
-            setStop();
-        }
-        else{
-            setSpeed(elevatorSpeed);
-        }
-    }
-
-
-    public void manualElevator(double elevatorSpeed) { // set the elevator with the xbox joystick
-        if (upperLimitPressed()) {
-            stopSpeedPositive(elevatorSpeed);
-        } else if (lowerLimitPressed()) {
-            stopSpeedNegative(elevatorSpeed);
-        }
-    }
+    // ROBOT SETUP
 
     public void initialize() {
         elevatorMotor.setNeutralMode(NeutralMode.Brake);
