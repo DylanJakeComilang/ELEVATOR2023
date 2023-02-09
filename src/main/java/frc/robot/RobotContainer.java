@@ -59,23 +59,20 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-   /* new JoystickButton(Joystick, 1).onTrue(new PositionsCommand(elevatorSubsystem,0,"Hybrid"));   // sets hybrid states
-    * new JoystickButton(Joystick, 2).onTrue(new PositionsCommand(elevatorSubsystem,10000,"Middle")); // sets middle states
-    * new JoystickButton(Joystick, 3).onTrue(new PositionsCommand(elevatorSubsystem,20000,"High")); // sets high states
-    */
+   // new JoystickButton(Joystick, 1).onTrue(new PositionsCommand(elevatorSubsystem,0,"Hybrid"));   // sets hybrid states
+   // new JoystickButton(Joystick, 2).onTrue(new PositionsCommand(elevatorSubsystem,10000,"Middle")); // sets middle states
+   // new JoystickButton(Joystick, 3).onTrue(new PositionsCommand(elevatorSubsystem,20000,"High")); // sets high states
+  
 
-    new JoystickButton(joystick, 2).onTrue(new goLowCommand(elevatorSubsystem));
-    new JoystickButton(joystick, 3).onTrue(new goMiddleCommand(elevatorSubsystem));
-    new JoystickButton(joystick, 4).onTrue(new goHighCommand(elevatorSubsystem));
+   // new JoystickButton(joystick, 2).onTrue(new goLowCommand(elevatorSubsystem));
+   // new JoystickButton(joystick, 3).onTrue(new goMiddleCommand(elevatorSubsystem));
+   // new JoystickButton(joystick, 4).onTrue(new goHighCommand(elevatorSubsystem));
 
-
-  //  new JoystickButton(Joystick, 5).whileTrue(new ElevatorCommand(elevatorSubsystem, 0.1));
-  //  new JoystickButton(Joystick, 6).whileTrue(new ElevatorCommand(elevatorSubsystem, -0.1));
     new JoystickButton(joystick,11).whileTrue(new resetEnCommand(elevatorSubsystem)); // reset encoder
 
-    /////////////////////////////////   |  Once the button is held, the can move manualy |
-    //         Lock Position       //   |      after being let go, position is locked    |
-    /////////////////////////////////   ↓                                                ↓
+    /////////////////////////////////   | Once the button is held, motor can move manualy |
+    //         Lock Position       //   |      after being let go, position is locked     |
+    /////////////////////////////////   ↓                                                 ↓
 
     new JoystickButton(joystick,5).whileTrue(new ElevatorCommand(elevatorSubsystem, () -> joystick.getY()));
     new JoystickButton(joystick,5).whileFalse(new PositionsCommand(elevatorSubsystem));

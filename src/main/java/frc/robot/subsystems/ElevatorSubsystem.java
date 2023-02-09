@@ -8,6 +8,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.math.controller.PIDController;
 
 public class ElevatorSubsystem extends SubsystemBase {
@@ -17,8 +21,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     private DigitalInput upperLimit = new DigitalInput(OperatorConstants.upperLimit);
     private DigitalInput lowerLimit = new DigitalInput(OperatorConstants.lowerLimit);
     private PIDController PID = new PIDController(0.0007, 0, 0);
-    private WPI_TalonFX elevatorMotor = new WPI_TalonFX(OperatorConstants.motorID);
-    private TalonFXSensorCollection elevatorEncoder = new TalonFXSensorCollection(elevatorMotor);
+    // private WPI_TalonFX elevatorMotor = new WPI_TalonFX(OperatorConstants.motorID);
+    // private TalonFXSensorCollection elevatorEncoder = new TalonFXSensorCollection(elevatorMotor);
+    private CANSparkMax elevatorMotor = new CANSparkMax(OperatorConstants.motorID, MotorType.kBrushless);
+    private RelativeEncoder elevatorEncoder;
+    
     private double previousErrorPos;
 
     public ElevatorSubsystem() {
@@ -43,11 +50,13 @@ public class ElevatorSubsystem extends SubsystemBase {
     ////////////////////////////////////
 
     public void resetEncoder() {
-        elevatorEncoder.setIntegratedSensorPosition(0, 0);
+        // elevatorEncoder.setIntegratedSensorPosition(0, 0);
+        elevatorEncoder.setPosition(0);
     }
 
     public double getEncoder() {
-        return elevatorEncoder.getIntegratedSensorPosition();
+        // return elevatorEncoder.getIntegratedSensorPosition();
+        return elevatorEncoder.getPosition();
     }
 
     ////////////////////////////////////
@@ -124,9 +133,9 @@ public class ElevatorSubsystem extends SubsystemBase {
         return (getEncoder() > highMin);
     }
 
-    ////////////////////////////////////
-    //           Set Motors           //
-    ////////////////////////////////////
+    //////////////////|\\\\\\\\\\\\\\\\\\
+    //           Set Motors            \\
+    //////////////////|\\\\\\\\\\\\\\\\\\
 
     public void setSpeed(double speed) {
         elevatorMotor.set(deadZone(-speed));
@@ -210,7 +219,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     // ROBOT SETUP
 
     public void initialize() {
-        elevatorMotor.setNeutralMode(NeutralMode.Brake);
+        // elevatorMotor.setNeutralMode(NeutralMode.Brake);
     }
 
     public void periodic() {
