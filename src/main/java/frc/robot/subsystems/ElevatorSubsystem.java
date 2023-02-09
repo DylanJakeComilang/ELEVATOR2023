@@ -58,7 +58,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         // return elevatorEncoder.getIntegratedSensorPosition();
         return elevatorEncoder.getPosition();
     }
-
+    
     ////////////////////////////////////
     //              PID               //
     ////////////////////////////////////
@@ -97,10 +97,6 @@ public class ElevatorSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Setpoint", setpoint);
         elevatorMotor.set(calc);
         controlI();
-    }
-
-    public void lockPID(){
-        calculate(getEncoder());
     }
 
     ////////////////////////////////////

@@ -7,8 +7,7 @@ import java.util.function.DoubleSupplier;
 public class ElevatorCommand extends CommandBase{
     ElevatorSubsystem elevator;
     DoubleSupplier doubleSupplier;
-    double speed;
-
+    
     public ElevatorCommand(ElevatorSubsystem elevatorSubsystem, DoubleSupplier doubleSupplier){
         elevator = elevatorSubsystem;
         this.doubleSupplier = doubleSupplier;
@@ -25,7 +24,7 @@ public class ElevatorCommand extends CommandBase{
     public void execute() {
         double joystickSpeed = doubleSupplier.getAsDouble();
         elevator.manualElevator(joystickSpeed);
-        elevator.lockPID();
+
     }
 
     @Override

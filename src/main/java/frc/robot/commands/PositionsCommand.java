@@ -6,25 +6,22 @@ import frc.robot.subsystems.ElevatorSubsystem;
 
 public class PositionsCommand extends CommandBase{
     ElevatorSubsystem elevator;
-    double setpoint;
+    double setSetPoint;
     String elevatorPosition;
 
-     public PositionsCommand(ElevatorSubsystem elevatorSubsystem/* , double setpoint, String elevatorPosition*/){
+     public PositionsCommand(ElevatorSubsystem elevatorSubsystem , double setpoint){
         elevator = elevatorSubsystem;
-        this.elevatorPosition = elevatorPosition;
-        this.setpoint = setpoint;
+        setSetPoint = setpoint;
         addRequirements(elevator);
     }
 
     @Override
     public void initialize() {
-        elevator.initialize();
     }
     
     @Override
     public void execute() {
-        SmartDashboard.putString("Elevator Position", elevatorPosition); // Prints the desired position
-        elevator.lockPID();
+        elevator.outputMotor(setSetPoint);
     }
 
     @Override
