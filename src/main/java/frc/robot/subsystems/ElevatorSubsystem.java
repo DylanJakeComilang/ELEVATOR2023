@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OperatorConstants;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
- 
+import frc.robot.subsystems.SingleChannelEncoder;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -23,6 +23,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private PIDController PID = new PIDController(0.0007, 0, 0);
     // private WPI_TalonFX elevatorMotor = new WPI_TalonFX(OperatorConstants.motorID);
     // private TalonFXSensorCollection elevatorEncoder = new TalonFXSensorCollection(elevatorMotor);
+    private SingleChannelEncoder SingleChannelEnc;
     private CANSparkMax elevatorMotor = new CANSparkMax(OperatorConstants.motorID, MotorType.kBrushless);
     private RelativeEncoder elevatorEncoder;
     
@@ -51,12 +52,14 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void resetEncoder() {
         // elevatorEncoder.setIntegratedSensorPosition(0, 0);
-        elevatorEncoder.setPosition(0);
+        // elevatorEncoder.setPosition(0);
+        SingleChannelEnc.reset();
     }
 
     public double getEncoder() {
         // return elevatorEncoder.getIntegratedSensorPosition();
-        return elevatorEncoder.getPosition();
+        // return elevatorEncoder.getPosition();
+        return SingleChannelEnc.get();
     }
     
     ////////////////////////////////////
