@@ -23,7 +23,7 @@ public class ElevatorCommand extends CommandBase{
  
     public void execute() {
         double joystickSpeed = doubleSupplier.getAsDouble();
-        elevator.manualElevator(joystickSpeed);
+        elevator.manualElevator(-joystickSpeed);
 
     }
 

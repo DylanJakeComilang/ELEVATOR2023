@@ -16,8 +16,8 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int upperLimit = 2;
-    public static final int lowerLimit = 0;
-    public static final int motorID = 2;
+    public static final int lowerLimit = 6;
+    public static final int motorID = 5;
 
   }
 }

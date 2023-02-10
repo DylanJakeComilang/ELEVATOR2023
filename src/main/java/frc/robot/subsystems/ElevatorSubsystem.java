@@ -8,6 +8,7 @@ import frc.robot.subsystems.SingleChannelEncoder;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -20,12 +21,13 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private DigitalInput upperLimit = new DigitalInput(OperatorConstants.upperLimit);
     private DigitalInput lowerLimit = new DigitalInput(OperatorConstants.lowerLimit);
-    private PIDController PID = new PIDController(0.0007, 0, 0);
+    private PIDController PID = new PIDController(0.00007, 0, 0);
     // private WPI_TalonFX elevatorMotor = new WPI_TalonFX(OperatorConstants.motorID);
     // private TalonFXSensorCollection elevatorEncoder = new TalonFXSensorCollection(elevatorMotor);
-    private SingleChannelEncoder SingleChannelEnc;
-    private CANSparkMax elevatorMotor = new CANSparkMax(OperatorConstants.motorID, MotorType.kBrushless);
-    private RelativeEncoder elevatorEncoder;
+    //private CANSparkMax elevatorMotor = new CANSparkMax(OperatorConstants.motorID, MotorType.kBrushless);
+    private WPI_TalonSRX elevatorMotor = new WPI_TalonSRX(OperatorConstants.motorID); 
+    private SingleChannelEncoder SingleChannelEnc = new SingleChannelEncoder(elevatorMotor, lowerLimit, 5);
+    // private RelativeEncoder elevatorEncoder;
     
     private double previousErrorPos;
 
@@ -137,7 +139,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     //////////////////|\\\\\\\\\\\\\\\\\\
 
     public void setSpeed(double speed) {
-        elevatorMotor.set(deadZone(-speed));
+        elevatorMotor.set(deadZone(speed));
     }
 
     public void setUp() {
@@ -166,7 +168,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void stopSpeedNegative(double elevatorSpeed){ // prevents manual controls from going negative | down ↓
-        if (elevatorSpeed > 0) {
+        if (elevatorSpeed < 0) {
             setStop();
         }
         else{
