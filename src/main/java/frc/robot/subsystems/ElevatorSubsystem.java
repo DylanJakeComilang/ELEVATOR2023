@@ -31,13 +31,13 @@ public class ElevatorSubsystem extends SubsystemBase {
     
     private double previousErrorPos;
 
-    // JAIRUS VARIABLE
-    private int jairus;
+
+    private int setpoint;
 
     public ElevatorSubsystem() {
         PID.setTolerance(10); // creates range for set point | ie. positionTolerence = 0.1, setpoint = 1 ->
                                                 // setpoint range = 0.9 , 1.1
-        jairus = getEncoder();
+        setpoint = getEncoder();
     }
 
     ////////////////////////////////////
@@ -66,6 +66,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         // return elevatorEncoder.getIntegratedSensorPosition();
         // return elevatorEncoder.getPosition();
         return SingleChannelEnc.get();
+    }
+
+    public void setSetpoint(int newSetpoint){
+         setpoint = newSetpoint;
     }
     
     ////////////////////////////////////
@@ -232,12 +236,15 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void periodic() {
-
-        // PRINT JAIRUS
-
-        jairus = getEncoder();
-
-        SmartDashboard.putNumber("Jairus", jairus);
+        if(lowerLimitPressed() || upperLimitPressed()){
+            setpoint = getEncoder();
+        }
+        
+        double calc = calculate(setpoint);
+        SmartDashboard.putNumber("Error", calc);
+        SmartDashboard.putNumber("Setpoint", setpoint);
+        elevatorMotor.set(calc);
+        controlI();
 
         SmartDashboard.putNumber("Encoder Count", getEncoder());
         SmartDashboard.putBoolean("Upper Limit Pressed", upperLimitPressed());

@@ -8,9 +8,6 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.commands.resetEnCommand;
 import frc.robot.commands.PositionsCommand;
 import frc.robot.commands.goHighCommand;
@@ -32,7 +29,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   private final XboxController xbox = new XboxController(0);
   private final Joystick joystick = new Joystick(1);
@@ -44,8 +40,6 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-    elevatorSubsystem.setDefaultCommand(new PositionsCommand(elevatorSubsystem/* , elevatorSubsystem.getEncoder()*/));
-
     configureBindings();
   }
 
@@ -75,15 +69,8 @@ public class RobotContainer {
     /////////////////////////////////   ↓                                                 ↓
 
     new JoystickButton(joystick, 5).whileTrue(new ElevatorCommand(elevatorSubsystem, () -> joystick.getY()));
+    new JoystickButton(joystick, 2).onTrue(new PositionsCommand(elevatorSubsystem, 10));
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
-  }
+
 }

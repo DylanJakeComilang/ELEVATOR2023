@@ -7,10 +7,10 @@ import frc.robot.subsystems.ElevatorSubsystem;
 public class PositionsCommand extends CommandBase{
     ElevatorSubsystem elevator;
     double setSetPoint;
-    double setpoint;
+    int setpoint;
     String elevatorPosition;
 
-     public PositionsCommand(ElevatorSubsystem elevatorSubsystem /*,double setpoint*/){
+     public PositionsCommand(ElevatorSubsystem elevatorSubsystem ,int setpoint){
         elevator = elevatorSubsystem;
         this.setpoint = setpoint;
         addRequirements(elevator);
@@ -18,12 +18,12 @@ public class PositionsCommand extends CommandBase{
 
     @Override
     public void initialize() {
-        setSetPoint = elevator.getEncoder();
+
     }
     
     @Override
     public void execute() {
-        elevator.outputMotor(setSetPoint);
+        elevator.setSetpoint(setpoint);
     }
 
     @Override
@@ -32,6 +32,6 @@ public class PositionsCommand extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return false;
+        return true;
     } 
 }
