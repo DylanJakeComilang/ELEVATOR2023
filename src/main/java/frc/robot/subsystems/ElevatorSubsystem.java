@@ -158,7 +158,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     //     TeleOp  |  Manual     //
     ///////////////////////////////
 
-    public void stopSpeedPositive(double elevatorSpeed){ // prevents manual controls from going positive | up ↑
+    public void stopSpeedPositive(double elevatorSpeed){ // prevents manual controls from going positive / up ↑
         if (elevatorSpeed > 0) {
             setStop();
         }
@@ -167,7 +167,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         }
     }
 
-    public void stopSpeedNegative(double elevatorSpeed){ // prevents manual controls from going negative | down ↓
+    public void stopSpeedNegative(double elevatorSpeed){ // prevents manual controls from going negative / down ↓
         if (elevatorSpeed < 0) {
             setStop();
         }
@@ -177,11 +177,14 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
 
-    public void manualElevator(double elevatorSpeed) { // set the elevator with the xbox joystick
-        if (upperLimitPressed()) {
+    public void manualElevator(double elevatorSpeed) { // set the elevator with the xbox joystick, when limits are 
+        if (upperLimitPressed()) {                     // preseed, they do not move to the coresponding direction
             stopSpeedPositive(elevatorSpeed);
         } else if (lowerLimitPressed()) {
             stopSpeedNegative(elevatorSpeed);
+        }
+        else{
+            setSpeed(elevatorSpeed);
         }
     }
 
