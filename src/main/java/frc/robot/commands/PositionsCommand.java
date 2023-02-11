@@ -7,16 +7,18 @@ import frc.robot.subsystems.ElevatorSubsystem;
 public class PositionsCommand extends CommandBase{
     ElevatorSubsystem elevator;
     double setSetPoint;
+    double setpoint;
     String elevatorPosition;
 
-     public PositionsCommand(ElevatorSubsystem elevatorSubsystem , double setpoint){
+     public PositionsCommand(ElevatorSubsystem elevatorSubsystem /*,double setpoint*/){
         elevator = elevatorSubsystem;
-        setSetPoint = setpoint;
+        this.setpoint = setpoint;
         addRequirements(elevator);
     }
 
     @Override
     public void initialize() {
+        setSetPoint = elevator.getEncoder();
     }
     
     @Override

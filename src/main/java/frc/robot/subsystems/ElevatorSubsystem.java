@@ -21,19 +21,23 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private DigitalInput upperLimit = new DigitalInput(OperatorConstants.upperLimit);
     private DigitalInput lowerLimit = new DigitalInput(OperatorConstants.lowerLimit);
-    private PIDController PID = new PIDController(0.00007, 0, 0);
+    private PIDController PID = new PIDController(0.007, 0, 0);
     // private WPI_TalonFX elevatorMotor = new WPI_TalonFX(OperatorConstants.motorID);
     // private TalonFXSensorCollection elevatorEncoder = new TalonFXSensorCollection(elevatorMotor);
     //private CANSparkMax elevatorMotor = new CANSparkMax(OperatorConstants.motorID, MotorType.kBrushless);
     private WPI_TalonSRX elevatorMotor = new WPI_TalonSRX(OperatorConstants.motorID); 
-    private SingleChannelEncoder SingleChannelEnc = new SingleChannelEncoder(elevatorMotor, lowerLimit, 5);
+    private SingleChannelEncoder SingleChannelEnc = new SingleChannelEncoder(elevatorMotor, lowerLimit);
     // private RelativeEncoder elevatorEncoder;
     
     private double previousErrorPos;
 
+    // JAIRUS VARIABLE
+    private int jairus;
+
     public ElevatorSubsystem() {
         PID.setTolerance(10); // creates range for set point | ie. positionTolerence = 0.1, setpoint = 1 ->
                                                 // setpoint range = 0.9 , 1.1
+        jairus = getEncoder();
     }
 
     ////////////////////////////////////
@@ -58,7 +62,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         SingleChannelEnc.reset();
     }
 
-    public double getEncoder() {
+    public int getEncoder() {
         // return elevatorEncoder.getIntegratedSensorPosition();
         // return elevatorEncoder.getPosition();
         return SingleChannelEnc.get();
@@ -134,9 +138,9 @@ public class ElevatorSubsystem extends SubsystemBase {
         return (getEncoder() > highMin);
     }
 
-    //////////////////|\\\\\\\\\\\\\\\\\\
-    //           Set Motors            \\
-    //////////////////|\\\\\\\\\\\\\\\\\\
+    /////////////////////////////////////
+    //           Set Motors            //
+    /////////////////////////////////////
 
     public void setSpeed(double speed) {
         elevatorMotor.set(deadZone(speed));
@@ -177,8 +181,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
 
-    public void manualElevator(double elevatorSpeed) { // set the elevator with the xbox joystick, when limits are 
-        if (upperLimitPressed()) {                     // preseed, they do not move to the coresponding direction
+    public void manualElevator(double elevatorSpeed) { // set the elevator with the xbox joystick, when limits are
+                                                        // pressed, they do not move to the coresponding direction
+        if (upperLimitPressed()) {
             stopSpeedPositive(elevatorSpeed);
         } else if (lowerLimitPressed()) {
             stopSpeedNegative(elevatorSpeed);
@@ -227,6 +232,13 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void periodic() {
+
+        // PRINT JAIRUS
+
+        jairus = getEncoder();
+
+        SmartDashboard.putNumber("Jairus", jairus);
+
         SmartDashboard.putNumber("Encoder Count", getEncoder());
         SmartDashboard.putBoolean("Upper Limit Pressed", upperLimitPressed());
         SmartDashboard.putBoolean("Lower Limit", lowerLimitPressed());
