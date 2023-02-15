@@ -10,7 +10,7 @@ public class PositionsCommand extends CommandBase{
     int setpoint;
     String elevatorPosition;
 
-     public PositionsCommand(ElevatorSubsystem elevatorSubsystem ,int setpoint){
+     public PositionsCommand(ElevatorSubsystem elevatorSubsystem, int setpoint){
         elevator = elevatorSubsystem;
         this.setpoint = setpoint;
         addRequirements(elevator);

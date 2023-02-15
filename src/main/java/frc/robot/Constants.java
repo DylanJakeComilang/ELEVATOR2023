@@ -18,6 +18,7 @@ public final class Constants {
     public static final int upperLimit = 2;
     public static final int lowerLimit = 6;
     public static final int motorID = 5;
+    public static final int encoder = 5;
 
   }
 }

@@ -18,9 +18,9 @@ public class ElevatorCommand extends CommandBase{
     
     @Override
     public void initialize() {
-        elevator.initialize();
+
     }
- 
+    
     public void execute() {
         double joystickSpeed = doubleSupplier.getAsDouble();
         elevator.manualElevator(-joystickSpeed);
