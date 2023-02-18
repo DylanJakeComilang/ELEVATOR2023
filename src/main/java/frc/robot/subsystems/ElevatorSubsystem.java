@@ -16,6 +16,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+
 import edu.wpi.first.math.controller.PIDController;
 
 public class ElevatorSubsystem extends SubsystemBase {
@@ -24,17 +25,18 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private DigitalInput upperLimit = new DigitalInput(OperatorConstants.upperLimit);
     private DigitalInput lowerLimit = new DigitalInput(OperatorConstants.lowerLimit);
-    private DigitalInput encoder = new DigitalInput(OperatorConstants.encoder);
+    //private DigitalInput encoder = new DigitalInput(OperatorConstants.encoder);
     private PIDController PID = new PIDController(0.6, 0, 0);
     // private WPI_TalonFX elevatorMotor = new WPI_TalonFX(OperatorConstants.motorID);
     // private TalonFXSensorCollection elevatorEncoder = new TalonFXSensorCollection(elevatorMotor);
-    //private CANSparkMax elevatorMotor = new CANSparkMax(OperatorConstants.motorID, MotorType.kBrushless);
-    private WPI_TalonSRX elevatorMotor = new WPI_TalonSRX(OperatorConstants.motorID); 
-    private SingleChannelEncoder SingleChannelEnc = new SingleChannelEncoder(elevatorMotor, encoder);
-    // private RelativeEncoder elevatorEncoder;
+    private CANSparkMax elevatorMotor = new CANSparkMax(OperatorConstants.motorID, MotorType.kBrushless);
+    // private WPI_TalonSRX elevatorMotor = new WPI_TalonSRX(OperatorConstants.motorID); 
+    //private SingleChannelEncoder SingleChannelEnc = new SingleChannelEncoder(elevatorMotor, encoder);
+    private RelativeEncoder elevatorEncoder;
     
     private double previousErrorPos;
-    private int setpoint;
+    private double setpoint;
+    
 
     public ElevatorSubsystem() {
         PID.setTolerance(0); // creates range for set point | ie. positionTolerence = 1, setpoint = 10 ->
@@ -59,17 +61,17 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void resetEncoder() {
         // elevatorEncoder.setIntegratedSensorPosition(0, 0);
-        // elevatorEncoder.setPosition(0);
-        SingleChannelEnc.reset();
+         elevatorEncoder.setPosition(0);
+        // SingleChannelEnc.reset();
     }
 
-    public int getEncoder() {
+    public double getEncoder() {
         // return elevatorEncoder.getIntegratedSensorPosition();
-        // return elevatorEncoder.getPosition();
-        return SingleChannelEnc.get();
+         return elevatorEncoder.getPosition();
+        // return SingleChannelEnc.get();
     }
 
-    public void setSetpoint(int newSetpoint){
+    public void setSetpoint(Double newSetpoint){
          setpoint = newSetpoint;
     }
     
@@ -79,7 +81,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public double calculate(double setpoint) {
         double calc = PID.calculate(getEncoder(), setpoint); // calculates error
-        double limit = 0.5;
+        double limit = 0.2;
         if (PID.atSetpoint()) { // if at setpoint, motor stops
             return 0;
         }

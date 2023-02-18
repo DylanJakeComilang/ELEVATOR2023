@@ -53,10 +53,10 @@ public class RobotContainer {
     //         Lock Position       //   |      after being let go, position is locked     |
     /////////////////////////////////   ↓                                                 ↓
 
-   // new JoystickButton(joystick, 5).whileTrue(new ElevatorCommand(elevatorSubsystem, () -> joystick.getY()));
-    new JoystickButton(joystick, 7).onTrue(new PositionsCommand(elevatorSubsystem, 20));
-    new JoystickButton(joystick, 8).onTrue(new PositionsCommand(elevatorSubsystem, 70));
-    new JoystickButton(joystick, 9).onTrue(new PositionsCommand(elevatorSubsystem, 120));
+    // new JoystickButton(joystick, 5).whileTrue(new ElevatorCommand(elevatorSubsystem, () -> joystick.getY()));
+    // new JoystickButton(joystick, 7).onTrue(new PositionsCommand(elevatorSubsystem, 0));
+    // new JoystickButton(joystick, 8).onTrue(new PositionsCommand(elevatorSubsystem,0));
+    // new JoystickButton(joystick, 9).onTrue(new PositionsCommand(elevatorSubsystem, 0));
   }
 
 
